@@ -5,15 +5,22 @@ import axios from 'axios';
 import { Button } from '../../components/Button/Button';
 import { Footer } from '../../components/Footer/Footer';
 import { Input } from '../../components/Input/Input';
-
-import { currencies } from '../../data/currencies';
 import { Select } from '../../components/Select/Select';
 import { Option } from '../../components/Select/Option/Option';
+import { Link } from '../../components/Link/Link';
+
+import { currencies } from '../../data/currencies';
 
 export const Home = () => {
-  const [currencyAmount, setCurrencyAmount] = useState({'currency-amount': 0})
-  const [selectedCurrencyItems, setSelectedCurrencyItems] = useState({'first_value': 'USD', 'second_value': 'PHP'})
-  const [currenciesData, setCurrenciesData] = useState({})
+  const [currenciesData, setCurrenciesData] = useState({});
+  const [currencyAmount, setCurrencyAmount] = useState({'currency-amount': 1});
+  const [computeCurrency, setComputeCurrency] = useState([]);
+  const [selectedCurrencyItems, setSelectedCurrencyItems] = useState(
+    {
+      'first_value': 'USD', 
+      'second_value': 'PHP'
+    }
+  );
 
   // const getData = () => {
   //   axios.get('https://free.currconv.com/api/v7/currencies?apiKey=c4ce82a9581c86dfe0e5')
@@ -25,6 +32,13 @@ export const Home = () => {
   // useEffect(() => {
   //   getData()
   // }, [])
+
+  // const getCurrencyPrices = () => {
+  //   axios.get(`https://free.currconv.com/api/v7/convert?q=${selectedCurrencyItems.first_value}_${selectedCurrencyItems.second_value}&compact=ultra&apiKey=c4ce82a9581c86dfe0e5`)
+  //     .then(response => {
+  //       setComputeCurrency(Object.values(response))
+  //     })
+  // }
 
   const handleInput = (e) => {
     const {name, value} = e.target;
@@ -42,6 +56,13 @@ export const Home = () => {
     })
   }
 
+  const swithOptionValues = () => {
+    setSelectedCurrencyItems({
+      'first_value': selectedCurrencyItems.second_value,
+      'second_value': selectedCurrencyItems.first_value
+    })
+  }
+
   return (
     <div>
       <h2>Currency Converter</h2>
@@ -50,6 +71,7 @@ export const Home = () => {
         <Input 
           type='number' 
           name='currency-amount' 
+          value={currencyAmount['currency-amount']}
           placeholder='Currency Amount' 
           onChange={handleInput}
         />
@@ -71,7 +93,7 @@ export const Home = () => {
         </p>
 
         <p>
-          <Button txt='Switch'/>
+          <Button txt='Switch' onClick={swithOptionValues}/>
         </p>
 
         <p>
@@ -92,11 +114,20 @@ export const Home = () => {
 
         <p>
           <span>
-            {`1 ${selectedCurrencyItems.first_value} = 3.97 ${selectedCurrencyItems.second_value}`}
+            {/* {`${currencyAmount['currency-amount']} ${selectedCurrencyItems.first_value} = ${currencyAmount['currency-amount'] * computeCurrency[0]} ${selectedCurrencyItems.second_value}`} */}
+            {`${currencyAmount['currency-amount']} ${selectedCurrencyItems.first_value} = 3.97 ${selectedCurrencyItems.second_value}`}
           </span>
         </p>
 
-        <p>Made with React</p>
+        <p>
+          <Link 
+            href='https://pl.reactjs.org/'
+            target='_blank'
+            rel='noopener noreferrer'
+          >
+            Made with React
+          </Link>
+        </p>
       </div>
 
       <Footer />

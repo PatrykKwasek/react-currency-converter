@@ -12,17 +12,17 @@ export const Footer = () => {
           <Link
             href='https://www.linkedin.com/in/patryk-kwasek-0b9a821b3/'
             target='_blank'
-            rel='noreferrer'
+            rel='noopener noreferrer'
           >
             <Linkedin />
           </Link>
         </p>
 
-        <p className='icon'>
+        <p>
           <Link
             href='https://github.com/PatrykKwasek'
             target='_blank'
-            rel='noreferrer'
+            rel='noopener noreferrer'
           >
             <GitHub />
           </Link>
