@@ -9,58 +9,42 @@ import { Select } from '../../components/Select/Select';
 import { Option } from '../../components/Select/Option/Option';
 import { Link } from '../../components/Link/Link';
 
-import { currencies } from '../../data/currencies';
-
 export const Home = () => {
-  const [currenciesData, setCurrenciesData] = useState({});
-  const [currencyAmount, setCurrencyAmount] = useState({'currency-amount': 1});
-  const [computeCurrency, setComputeCurrency] = useState([]);
-  const [selectedCurrencyItems, setSelectedCurrencyItems] = useState(
-    {
-      'first_value': 'USD', 
-      'second_value': 'PHP'
-    }
-  );
-
-  // const getData = () => {
-  //   axios.get('https://free.currconv.com/api/v7/currencies?apiKey=c4ce82a9581c86dfe0e5')
-  //     .then(response => {
-  //       setCurrenciesData(currenciesData.concat(response.results))
-  //     })
-  // }
-
-  // useEffect(() => {
-  //   getData()
-  // }, [])
-
-  // const getCurrencyPrices = () => {
-  //   axios.get(`https://free.currconv.com/api/v7/convert?q=${selectedCurrencyItems.first_value}_${selectedCurrencyItems.second_value}&compact=ultra&apiKey=c4ce82a9581c86dfe0e5`)
-  //     .then(response => {
-  //       setComputeCurrency(Object.values(response))
-  //     })
-  // }
-
-  const handleInput = (e) => {
-    const {name, value} = e.target;
-    setCurrencyAmount({
-      ...currencyAmount,
-      [name]: value
-    })
+  const [currenciesOptions, setCurrenciesOptions] = useState([]); //Set all select options
+  const [from, setFrom] = useState('USD'); //Set from currency
+  const [to, setTo] = useState('PHP'); //Set to currency
+  const [exchangeRate, setExchangeRate] = useState(0); //Set exchange value, means 1 USD = 3.97 PLN
+  const [currencyAmountInput, setCurrencyAmountInput] = useState(1); //User input value
+  
+  const getData = () => {
+    axios.get('https://free.currconv.com/api/v7/currencies?apiKey=c4ce82a9581c86dfe0e5')
+      .then(response => {
+        setCurrenciesOptions(Object.keys(response.data.results).sort());
+      })
+  }
+  
+  const getExchangeRate = () => {
+    axios.get(
+      `https://free.currconv.com/api/v7/convert?q=${from}_${to}&compact=ultra&apiKey=c4ce82a9581c86dfe0e5`
+      )
+      .then(response => {
+        setExchangeRate(response.data[`${from}_${to}`])
+      })
   }
 
-  const handleSelectOnChange = (e) => {
-    const {name, value} = e.target;
-    setSelectedCurrencyItems({
-      ...selectedCurrencyItems,
-      [name]: value
-    })
+  useEffect(() => {
+    getData();
+    getExchangeRate();
+  }, [from ,to])
+
+  const handleInput = (e) => {
+    setCurrencyAmountInput(e.target.value);
   }
 
   const swithOptionValues = () => {
-    setSelectedCurrencyItems({
-      'first_value': selectedCurrencyItems.second_value,
-      'second_value': selectedCurrencyItems.first_value
-    })
+    let temp = from;
+    setFrom(to);
+    setTo(temp)
   }
 
   return (
@@ -70,23 +54,23 @@ export const Home = () => {
       <div>
         <Input 
           type='number' 
-          name='currency-amount' 
-          value={currencyAmount['currency-amount']}
+          name='currency-amount-input' 
+          value={currencyAmountInput}
           placeholder='Currency Amount' 
           onChange={handleInput}
         />
 
         <p>
           <Select 
-            value={selectedCurrencyItems.first_value} 
+            value={from} 
             name='first_value' 
-            onChange={handleSelectOnChange}
+            onChange={e => setFrom(e.target.value)}
           >
-            {currencies.map((item, index) => (
+            {currenciesOptions.map((item, index) => (
               <Option 
-                value={Object.values(item)[0].id} 
+                value={item} 
                 key={`List-item-${index}`}
-                txt={Object.values(item)[0].id}
+                txt={item}
               />
             ))}
           </Select>
@@ -98,15 +82,15 @@ export const Home = () => {
 
         <p>
           <Select 
-            value={selectedCurrencyItems.second_value} 
+            value={to} 
             name='second_value' 
-            onChange={handleSelectOnChange}
+            onChange={e => setTo(e.target.value)}
           >
-            {currencies.map((item, index) => (
+            {currenciesOptions.map((item, index) => (
               <Option 
-                value={Object.values(item)[0].id} 
+                value={item} 
                 key={`List-item-${index}`}
-                txt={Object.values(item)[0].id}
+                txt={item}
               />
             ))}
           </Select>
@@ -114,8 +98,9 @@ export const Home = () => {
 
         <p>
           <span>
-            {/* {`${currencyAmount['currency-amount']} ${selectedCurrencyItems.first_value} = ${currencyAmount['currency-amount'] * computeCurrency[0]} ${selectedCurrencyItems.second_value}`} */}
-            {`${currencyAmount['currency-amount']} ${selectedCurrencyItems.first_value} = 3.97 ${selectedCurrencyItems.second_value}`}
+            {exchangeRate !== 0 && (
+              `${currencyAmountInput} ${from} = ${currencyAmountInput * exchangeRate} ${to}`
+            )}
           </span>
         </p>
 

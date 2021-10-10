@@ -1,3 +1,7 @@
+/*
+The data below was created for testing purposes
+*/
+
 export const currencies = [
   {AED: {currencyName: 'UAE Dirham', id: 'AED'}},
   {ALL: {currencyName: 'Albanian Lek', currencySymbol: 'Lek', id: 'ALL'}},
