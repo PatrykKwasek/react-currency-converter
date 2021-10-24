@@ -1,121 +1,68 @@
 import React, { useEffect, useState } from 'react';
 
-import axios from 'axios';
-
-import { Button } from '../../components/Button/Button';
-import { Footer } from '../../components/Footer/Footer';
-import { Input } from '../../components/Input/Input';
-import { Select } from '../../components/Select/Select';
-import { Option } from '../../components/Select/Option/Option';
-import { Link } from '../../components/Link/Link';
+import { getData } from '../../components/Api/Api';
+import { HomeContent } from './HomeContent';
 
 export const Home = () => {
   const [currenciesOptions, setCurrenciesOptions] = useState([]); //Set all select options
-  const [from, setFrom] = useState('USD'); //Set from currency
-  const [to, setTo] = useState('PHP'); //Set to currency
+  const [currencyName, setCurrencyName] = useState({
+    from: 'USD',
+    to: 'PHP'
+  })
   const [exchangeRate, setExchangeRate] = useState(0); //Set exchange value, means 1 USD = 3.97 PLN
   const [currencyAmountInput, setCurrencyAmountInput] = useState(1); //User input value
-  
-  const getData = () => {
-    axios.get('https://free.currconv.com/api/v7/currencies?apiKey=c4ce82a9581c86dfe0e5')
+
+  const getAPIData = () => {
+    getData('currencies?')
       .then(response => {
         setCurrenciesOptions(Object.keys(response.data.results).sort());
       })
   }
-  
+
   const getExchangeRate = () => {
-    axios.get(
-      `https://free.currconv.com/api/v7/convert?q=${from}_${to}&compact=ultra&apiKey=c4ce82a9581c86dfe0e5`
-      )
+    getData(`convert?q=${currencyName.from}_${currencyName.to}&compact=ultra&`)
       .then(response => {
-        setExchangeRate(response.data[`${from}_${to}`])
+        setExchangeRate(response.data[`${currencyName.from}_${currencyName.to}`])
       })
   }
 
   useEffect(() => {
-    getData();
+    getAPIData();
     getExchangeRate();
-  }, [from ,to])
+  }, [currencyName.from, currencyName.to])
 
   const handleInput = (e) => {
     setCurrencyAmountInput(e.target.value);
   }
 
+  const handleSelect = (e) => {
+    const {name, value} = e.target;
+    setCurrencyName({
+      ...currencyName,
+      [name]: value
+    })
+  }
+
   const swithOptionValues = () => {
-    let temp = from;
-    setFrom(to);
-    setTo(temp)
+    let temp = currencyName.from;
+    setCurrencyName({
+      from: currencyName.to,
+      to: temp,
+    })
   }
 
   return (
     <div>
-      <h2>Currency Converter</h2>
-
-      <div>
-        <Input 
-          type='number' 
-          name='currency-amount-input' 
-          value={currencyAmountInput}
-          placeholder='Currency Amount' 
-          onChange={handleInput}
-        />
-
-        <p>
-          <Select 
-            value={from} 
-            name='first_value' 
-            onChange={e => setFrom(e.target.value)}
-          >
-            {currenciesOptions.map((item, index) => (
-              <Option 
-                value={item} 
-                key={`List-item-${index}`}
-                txt={item}
-              />
-            ))}
-          </Select>
-        </p>
-
-        <p>
-          <Button txt='Switch' onClick={swithOptionValues}/>
-        </p>
-
-        <p>
-          <Select 
-            value={to} 
-            name='second_value' 
-            onChange={e => setTo(e.target.value)}
-          >
-            {currenciesOptions.map((item, index) => (
-              <Option 
-                value={item} 
-                key={`List-item-${index}`}
-                txt={item}
-              />
-            ))}
-          </Select>
-        </p>
-
-        <p>
-          <span>
-            {exchangeRate !== 0 && (
-              `${currencyAmountInput} ${from} = ${currencyAmountInput * exchangeRate} ${to}`
-            )}
-          </span>
-        </p>
-
-        <p>
-          <Link 
-            href='https://pl.reactjs.org/'
-            target='_blank'
-            rel='noopener noreferrer'
-          >
-            Made with React
-          </Link>
-        </p>
-      </div>
-
-      <Footer />
+      <HomeContent 
+        currencyAmountInput={currencyAmountInput}
+        handleInput={handleInput}
+        handleSelect={handleSelect}
+        from={currencyName.from}
+        to={currencyName.to}
+        currenciesOptions={currenciesOptions}
+        swithOptionValues={swithOptionValues}
+        exchangeRate={exchangeRate}
+      />
     </div>
   )
 }
