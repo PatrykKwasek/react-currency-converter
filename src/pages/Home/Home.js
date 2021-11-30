@@ -26,17 +26,17 @@ export const Home = () => {
       })
   }
 
-  useEffect(() => {
-    getAPIData();
-    getExchangeRate();
-  }, [currencyName.from, currencyName.to])
+  // useEffect(() => {
+  //   getAPIData();
+  //   getExchangeRate();
+  // }, [currencyName.from, currencyName.to])
 
   const handleInput = (e) => {
     setCurrencyAmountInput(e.target.value);
   }
 
   const handleSelect = (e) => {
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     setCurrencyName({
       ...currencyName,
       [name]: value
@@ -53,7 +53,7 @@ export const Home = () => {
 
   return (
     <div>
-      <HomeContent 
+      <HomeContent
         currencyAmountInput={currencyAmountInput}
         handleInput={handleInput}
         handleSelect={handleSelect}

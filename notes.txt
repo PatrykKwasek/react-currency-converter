@@ -1,0 +1,8 @@
+Available APIs:
+1. https://github.com/fawazahmed0/currency-api#readme -> Api_key = 'c4ce82a9581c86dfe0e5'
+2. https://exchangeratesapi.io/ -> Api_key = b01e88c01ff3ea9950d52bfaeeb37d56
+3. https://free.currencyconverterapi.com/
+
+JSON https://free.currconv.com/api/v7/convert?q=USD_PHP&compact=ultra&apiKey=c4ce82a9581c86dfe0e5
+CURRENCIES https://free.currconv.com/api/v7/currencies?apiKey=c4ce82a9581c86dfe0e5
+COUNTRIES  https://free.currconv.com/api/v7/countries?apiKey=c4ce82a9581c86dfe0e5

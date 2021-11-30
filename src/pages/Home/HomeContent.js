@@ -8,13 +8,13 @@ import { Option } from '../../components/Select/Option/Option';
 import { Select } from '../../components/Select/Select';
 
 export const HomeContent = ({
-  currencyAmountInput, 
-  handleInput, 
+  currencyAmountInput,
+  handleInput,
   handleSelect,
-  from, 
-  to, 
-  currenciesOptions, 
-  swithOptionValues, 
+  from,
+  to,
+  currenciesOptions,
+  swithOptionValues,
   exchangeRate
 }) => {
   return (
@@ -22,23 +22,23 @@ export const HomeContent = ({
       <h2>Currency Converter</h2>
 
       <div>
-        <Input 
-          type='number' 
-          name='currency-amount-input' 
+        <Input
+          type='number'
+          name='currency-amount-input'
           value={currencyAmountInput}
-          placeholder='Currency Amount' 
+          placeholder='Currency Amount'
           onChange={handleInput}
         />
 
         <p>
-          <Select 
-            value={from} 
-            name='from' 
+          <Select
+            value={from}
+            name='from'
             onChange={handleSelect}
           >
             {currenciesOptions.map((item, index) => (
-              <Option 
-                value={item} 
+              <Option
+                value={item}
                 key={`List-item-${index}`}
                 txt={item}
               />
@@ -47,18 +47,18 @@ export const HomeContent = ({
         </p>
 
         <p>
-          <Button txt='Switch' onClick={swithOptionValues}/>
+          <Button txt='Switch' onClick={swithOptionValues} />
         </p>
 
         <p>
-          <Select 
-            value={to} 
-            name='to' 
+          <Select
+            value={to}
+            name='to'
             onChange={handleSelect}
           >
             {currenciesOptions.map((item, index) => (
-              <Option 
-                value={item} 
+              <Option
+                value={item}
                 key={`List-item-${index}`}
                 txt={item}
               />
@@ -66,17 +66,16 @@ export const HomeContent = ({
           </Select>
         </p>
 
-        {/* Set length for 2 digits after comma */}
         <p>
           <span>
             {exchangeRate !== 0 && (
-              `${currencyAmountInput} ${from} = ${currencyAmountInput * exchangeRate} ${to}`
+              `${currencyAmountInput} ${from} = ${(currencyAmountInput * exchangeRate).toFixed(2)} ${to}`
             )}
           </span>
         </p>
 
         <p>
-          <Link 
+          <Link
             href='https://pl.reactjs.org/'
             target='_blank'
             rel='noopener noreferrer'
